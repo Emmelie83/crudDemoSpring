@@ -1,11 +1,14 @@
 package com.emmeliejohansson.cruddemo;
 
+import ch.qos.logback.core.encoder.JsonEscapeUtil;
 import com.emmeliejohansson.cruddemo.dao.StudentDAO;
 import com.emmeliejohansson.cruddemo.entity.Student;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import java.util.List;
 
 @SpringBootApplication
 public class CrudDemoApplication {
@@ -18,8 +21,26 @@ public class CrudDemoApplication {
     public CommandLineRunner commandLineRunner(StudentDAO studentDAO) {
         return runner -> {
             //createStudent(studentDAO);
-            createMultipleStudents(studentDAO);
+            //createMultipleStudents(studentDAO);
+            //readStudent(studentDAO);
+            queryForStudents(studentDAO);
         };
+    }
+
+    private void queryForStudents(StudentDAO studentDAO) {
+        List<Student> theStudents = studentDAO.findAll();
+
+        for (Student tempStudent : theStudents) {
+            System.out.println(tempStudent);
+        }
+    }
+
+    private void readStudent(StudentDAO studentDAO) {
+        Student tempStudent = new Student("Daffy", "Duck", "daffy@luv2code.com");
+        studentDAO.save(tempStudent);
+        int theId = tempStudent.getId();
+        Student myStudent = studentDAO.findById(theId);
+        System.out.println("Found the student: " + myStudent);
     }
 
     private void createMultipleStudents(StudentDAO studentDAO) {
